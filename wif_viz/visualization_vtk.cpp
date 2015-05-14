@@ -189,7 +189,7 @@ void visualization_vtk_c::draw_ivo(const std::string & filename)
 				max_v = this->clip_max;
 			}
 
-			double delta = max_v - min_v;
+			//double delta = max_v - min_v;
 
 			double r1 = red(0x00134e5e);
 			double g1 = green(0x00134e5e);
@@ -250,7 +250,7 @@ void visualization_vtk_c::draw_ivo(const std::string & filename)
 				max_v = this->clip_max;
 			}
 
-			double delta = max_v - min_v;
+			//double delta = max_v - min_v;
 
 			double r1 = red(0x00134e5e);
 			double g1 = green(0x00134e5e);

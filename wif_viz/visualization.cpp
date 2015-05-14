@@ -11,10 +11,10 @@ visualization_c::visualization_c(std::shared_ptr<flow_c> flow, const vector_2d_c
 	psi_bins(0.0, 0.0),
 	phi_bins(0.0, 0.0),
 	velocity_bins(0.0, 0.0),
-	streamline_seeds(0.0, 0.0, 0.0, 0.0),
-	streamline_resolution(0),
 	stagnation_tolerance(0.001),
-	airfoil(nullptr)
+	airfoil(nullptr),
+	streamline_seeds(0.0, 0.0, 0.0, 0.0),
+	streamline_resolution(0)
 {
 	//
 }
