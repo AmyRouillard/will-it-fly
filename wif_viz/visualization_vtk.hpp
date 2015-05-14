@@ -97,11 +97,13 @@ private:
 
 	vtkSmartPointer<vtkPlaneSource> construct_phi_plane() const;
 
-	vtkSmartPointer<vtkStructuredGrid> construct_velocity_grid();
+	vtkSmartPointer<vtkStructuredGrid> construct_velocity_grid() const;
 
 	void contour_plot(vtkSmartPointer<vtkPlaneSource> plane, std::vector<double> contlvls) const; //int ncont
 
 	void streamlines_plot(vtkSmartPointer<vtkStructuredGrid> sgrid, uint32_t number_of_streamlines) const;
+
+	void arrow_plot() const;
 
 	vtkSmartPointer<vtkActor> geef_actor_lijnen(std::vector<wif_core::line_2d_c>);
 

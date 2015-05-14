@@ -59,6 +59,10 @@ public:
 
 	virtual void draw(const std::string & filename = "") = 0;
 
+	void set_streamline_seeds(const wif_core::line_2d_c & streamline_seeds);
+
+	void set_streamline_resolution(uint32_t streamline_resolution);
+
 	//
 
 protected:
@@ -70,15 +74,18 @@ protected:
 	vector_2d_c phi_bins;
 	vector_2d_c velocity_bins;
 
-	std::vector<double_t> contour_locations;
+	std::vector<double> contour_locations;
 	double clip_min;
 	double clip_max;
 	bool output_to_file;
 
-	std::vector<vector_2d_c> stagnation_point;
+	mutable std::vector<vector_2d_c> stagnation_point;
 	double stagnation_tolerance;
 
 	wif_core::airfoil_c * airfoil;
+
+	wif_core::line_2d_c streamline_seeds;
+	uint32_t streamline_resolution;
 
 private:
 
