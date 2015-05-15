@@ -274,7 +274,8 @@ calculation_results_c calculate_flow(const wif_core::airfoil_c & myAirfoil, std:
 		}
 
 		//Calculate c_l
-		double ll = std::accumulate(lengths.begin(), lengths.end(), 0);
+		double ll =0;
+		for (int i=0; i<lengths.size();i++){ll+= lengths[i];}
 		double x_max = points_airfoil[0].x;
 		double x_min = points_airfoil[0].x;
 
@@ -303,7 +304,6 @@ calculation_results_c calculate_flow(const wif_core::airfoil_c & myAirfoil, std:
 		c.c_p = c_p;
 		c.c_l = c_l;
 
-		////
 		double E = 0;
 
 		for(int i = 0; i < num_lines; i++)
@@ -512,7 +512,8 @@ calculation_results_c calculate_flow(const wif_core::airfoil_c & myAirfoil, std:
 		}
 
 		//Calculate c_l
-		double ll = std::accumulate(lengths.begin(), lengths.end(), 0);
+		double ll =0;
+		for (int i=0; i<lengths.size();i++){ll+= lengths[i];}
 		double x_max = points_airfoil[0].x;
 		double x_min = points_airfoil[0].x;
 
@@ -542,13 +543,15 @@ calculation_results_c calculate_flow(const wif_core::airfoil_c & myAirfoil, std:
 		c.c_p = c_p;
 		c.c_l = c_l;
 
-		////
 		double E = 0;
 
 		for(int i = 0; i < num_lines; i++)
 		{
 			E += lengths[i] * Sigma[i];
 		}
+
+		E += lengths[0] * Gamma;
+		E += lengths[num_lines - 1] * Gamma;
 
 		c.closed_body_check = E;
 	} // else kutta
