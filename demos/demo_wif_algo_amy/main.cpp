@@ -76,11 +76,12 @@ int main()
         std::vector<std::string> legende;
         legende.push_back("Numeriek bepaalde waarden");
         legende.push_back("Theoretische waarden");
-        std::string filename= "/home/uauser/Documents/eindwerk-programmeren/will-it-fly/demos/demo_wif_algo_amy/Data/plot_cp.pdf"
-        std::shared_ptr<wif_viz::visualization_c> myRoot = wif_viz::create_visualization_root(myFlow, midpoint, midpoint);
         std::string title ="Cp: "+ std::to_string(num_lines)+ "panelen gebruikt";
-        myRoot->plotVectors(x_plot,y_plot, legende, filename, "Index paneel", "Cp",title);
-		//
+        std::string filename= "/home/uauser/Documents/eindwerk-programmeren/will-it-fly/demos/demo_wif_algo_amy/Data/plot_cp.pdf";
+
+        //std::shared_ptr<wif_viz::visualization_c> myRoot = wif_viz::create_visualization_root(myFlow, midpoint, midpoint);
+        //myRoot->plotVectors(x_plot,y_plot, legende, filename, "Index paneel", "Cp",title);
+
 	}
 
 //num_lines_all,fout
