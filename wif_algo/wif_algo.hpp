@@ -8,8 +8,8 @@
 #include <stdio.h>
 #include <memory>
 #include <cmath>
-#include <gsl/gsl_linalg.h>
-#include <gsl/gsl_integration.h>
+
+
 #include <wif_core/wif_core.hpp>
 
 namespace wif_algo
@@ -26,7 +26,8 @@ struct calculation_results_c
 	/// c_p[i] moet overeenkomen met panel airfoil.get_lines()[i]
 	std::vector<double> c_p;
 	double c_l;
-	double som_sigma_l;
+
+	double closed_body_check;
 };
 
 uint32_t get_version();
