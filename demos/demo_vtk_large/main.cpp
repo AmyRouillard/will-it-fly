@@ -105,10 +105,14 @@ void test_airfoil(wif_core::airfoil_c & foil)
 
 	wif_core::vector_2d_c centre(0.5, 0.0);
 	wif_core::airfoil_c circle(centre, 0.5, 20);
+	//wif_core::line_2d_c line(0.0, -1.0, 0.0, 1.0);
 
 	std::shared_ptr<wif_core::uniform_flow_c> flow = std::make_shared<wif_core::uniform_flow_c>(0.0 * M_PI / 180, 1.0);
 
 	auto result = wif_algo::calculate_flow(circle, flow, false, 0.0);
+
+	//std::shared_ptr<wif_core::flow_accumulate_c> flowacc = std::make_shared<wif_core::flow_accumulate_c>(flow);
+	//flowacc->add_source_sheet(line, 1.0)
 
 	{
 		std::shared_ptr<wif_viz::visualization_c> vizy = wif_viz::create_visualization_vtk(result.flow, { -0.5, -1.0}, {1.5, 1});
