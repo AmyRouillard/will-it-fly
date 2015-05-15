@@ -321,7 +321,7 @@ calculation_results_c calculate_flow(const wif_core::airfoil_c & myAirfoil, std:
 		double matrix_A_data [num_rows * num_columns];
 		double vector_b_data [num_columns];
 		int k = 0; //first panel
-		int l = num_lines-1; //last panel
+		int l = num_lines - 1; //last panel
 		struct integration_function_parameters parameters;
 
 		gsl_matrix_view matrix_A_view
