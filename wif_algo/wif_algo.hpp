@@ -26,7 +26,7 @@ struct calculation_results_c
 	/// c_p[i] moet overeenkomen met panel airfoil.get_lines()[i]
 	std::vector<double> c_p;
 	double c_l;
-
+    double gamma;
 	double closed_body_check;
 };
 

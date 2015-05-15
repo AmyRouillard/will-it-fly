@@ -303,6 +303,7 @@ calculation_results_c calculate_flow(const wif_core::airfoil_c & myAirfoil, std:
 		c.flow = accumulate_flow;
 		c.c_p = c_p;
 		c.c_l = c_l;
+        c.gamma=gamma;
 
 		double E = 0;
 
@@ -536,12 +537,13 @@ calculation_results_c calculate_flow(const wif_core::airfoil_c & myAirfoil, std:
 		accumulate_flow->add_source_sheets(Sigma, myAirfoil);
 		accumulate_flow->add_vortex_sheets(Gamma, myAirfoil);
 
-		std::cout << "Gamma is " << Gamma << std::endl;
+		//std::cout << "Gamma is " << Gamma << std::endl;
 
 		c.airfoil = myAirfoil;
 		c.flow = accumulate_flow;
 		c.c_p = c_p;
 		c.c_l = c_l;
+		c.gamma=Gamma;
 
 		double E = 0;
 
