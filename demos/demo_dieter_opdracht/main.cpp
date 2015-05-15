@@ -257,9 +257,5 @@ int main()
 
 	std::cout << calculate_flow2.c_l << "   " << calculate_flow3.c_l << "   " << calculate_flow4.c_l << std::endl;
 
-	*/
-
-
-
 	return 0;
-}
+	}
