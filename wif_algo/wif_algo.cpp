@@ -281,7 +281,6 @@ calculation_results_c calculate_flow(const wif_core::airfoil_c & myAirfoil, std:
 		c.c_p = c_p;
 		c.c_l = c_l;
 
-		////
 		double E = 0;
 
 		for(int i = 0; i < num_lines; i++)
@@ -289,9 +288,7 @@ calculation_results_c calculate_flow(const wif_core::airfoil_c & myAirfoil, std:
 			E += lengths[i] * Sigma[i];
 		}
 
-		std::cout << "Voor een gesloten lichaam moet de som van alle source sterktes gelijk zijn aan nul, vergelijking (31):";
-		std::cout << E << std::endl;
-
+		c.som_sigma_l = E;
 	} // if (Kutta)
 	else
 	{
@@ -516,6 +513,18 @@ calculation_results_c calculate_flow(const wif_core::airfoil_c & myAirfoil, std:
 		c.flow = accumulate_flow;
 		c.c_p = c_p;
 		c.c_l = c_l;
+
+		double E = 0;
+
+		for(int i = 0; i < num_lines; i++)
+		{
+			E += lengths[i] * Sigma[i];
+		}
+
+		E += lengths[0] * Gamma;
+		E += lengths[num_lines - 1] * Gamma;
+		c.som_sigma_l = E;
+
 	} // else kutta
 
 
