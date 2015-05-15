@@ -274,7 +274,8 @@ calculation_results_c calculate_flow(const wif_core::airfoil_c & myAirfoil, std:
 		}
 
 		//Calculate c_l
-		double ll = std::accumulate(lengths.begin(), lengths.end(), 0);
+		double ll =0;
+		for (int i=0; i<lengths.size();i++){ll+= lengths[i];}
 		double x_max = points_airfoil[0].x;
 		double x_min = points_airfoil[0].x;
 
@@ -511,7 +512,8 @@ calculation_results_c calculate_flow(const wif_core::airfoil_c & myAirfoil, std:
 		}
 
 		//Calculate c_l
-		double ll = std::accumulate(lengths.begin(), lengths.end(), 0);
+		double ll =0;
+		for (int i=0; i<lengths.size();i++){ll+= lengths[i];}
 		double x_max = points_airfoil[0].x;
 		double x_min = points_airfoil[0].x;
 
