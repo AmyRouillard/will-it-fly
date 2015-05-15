@@ -57,10 +57,12 @@ int main()
 
 		}
 
-        fout[q-1]= fout_accum/num_lines;
+        fout[q-1]= log10((fout_accum/num_lines));
 		times[q-1]=(std::clock() - start) / (double)CLOCKS_PER_SEC ;
-		som_sigma_l[q-1]=calculate_flow2.closed_body_check;
+		som_sigma_l[q-1]=(calculate_flow2.closed_body_check)*1000;
 		num_lines_all[q-1]=num_lines;
+
+        std::cout<< fout[q-1] <<std::endl;
 
 		std::vector<std::vector<double>> y_plot;
 		y_plot.push_back(calculate_flow2.c_p);
@@ -91,7 +93,7 @@ int main()
     std::shared_ptr<wif_viz::visualization_c> myRoot_2 = wif_viz::create_visualization_root(myFlow, midpoint, midpoint);
     std::vector<std::vector<double>> y_plot_fout;
     y_plot_fout.push_back(fout);
-    myRoot_2 ->plotVectors(y_plot_fout,num_lines_all, legende_error, filename_error, "Aantal panelen", "Fout op Cp",title_error);
+    myRoot_2 ->plotVectors(y_plot_fout,num_lines_all, legende_error, filename_error, "Aantal panelen", "log10(Fout op Cp)",title_error);
 
     std::vector<std::string> legende_time;
     legende_time.push_back("Tijdsduur");
@@ -109,7 +111,7 @@ int main()
     std::shared_ptr<wif_viz::visualization_c> myRoot_4 = wif_viz::create_visualization_root(myFlow, midpoint, midpoint);
     std::vector<std::vector<double>> y_plot_sigma;
     y_plot_sigma.push_back(som_sigma_l);
-    myRoot_4 ->plotVectors(y_plot_sigma,num_lines_all,legende_sigma, filename_sigma, "Aantal panelen", "Som sigma *l",title_sigma);
+    myRoot_4 ->plotVectors(y_plot_sigma,num_lines_all,legende_sigma, filename_sigma, "Aantal panelen", "Som sigma *l (10^3)",title_sigma);
 
 	return 0;
 }
