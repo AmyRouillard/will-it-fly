@@ -92,7 +92,7 @@ double v_t_source_function(double s, void * parameters)
 	double yc = (params->yc);
 	double xa = (params->xa);
 	double ya = (params->ya);
-	double a = ((xc - (xa - s * sin(betaj))) * -sin(beta) + (yc - (ya + s * cos(betaj))) * cos(beta)) ;
+	double a = (-(xc - (xa - s * sin(betaj))) * sin(beta) + (yc - (ya + s * cos(betaj))) * cos(beta)) ;
 	double b = (pow((xc - (xa - s * sin(betaj))), 2.) + pow((yc - (ya + s * cos(betaj))), 2.));
 
 	return a / b;
@@ -122,6 +122,8 @@ calculation_results_c calculate_flow(const wif_core::airfoil_c & myAirfoil, std:
 	int num_lines = mylines.size();
 
 
+
+
 	std::vector<double> lengths(num_lines);
 	std::vector<wif_core::vector_2d_c> centers(num_lines);
 	std::vector<double> angles(num_lines);
@@ -133,13 +135,33 @@ calculation_results_c calculate_flow(const wif_core::airfoil_c & myAirfoil, std:
 		lengths[i] = temp_line.get_length();
 		centers[i] = temp_line.get_center_point();
 
-		if(centers[i].y > 0)
+		if(temp_line.begin.x > temp_line.end.x && temp_line.begin.y > temp_line.end.y)
 		{
-			angles[i] = atan2(centers[i].y, centers[i].x);
+			angles[i] = temp_line.get_angle() - pi / 2;
+		}
+		else if(temp_line.begin.x > temp_line.end.x && temp_line.begin.y < temp_line.end.y)
+		{
+			angles[i] = temp_line.get_angle() - pi / 2;
+		}
+		else if(temp_line.begin.x < temp_line.end.x && temp_line.begin.y > temp_line.end.y)
+		{
+			angles[i] = temp_line.get_angle() - pi / 2;
+		}
+		else if(temp_line.begin.x < temp_line.end.x && temp_line.begin.y < temp_line.end.y)
+		{
+			angles[i] = temp_line.get_angle() + (3 * pi) / 2;
+		}
+		else if(temp_line.begin.x == temp_line.end.x)
+		{
+			angles[i] = 0;
+		}
+		else if(temp_line.begin.y == temp_line.end.y)
+		{
+			angles[i] = pi / 2;
 		}
 		else
 		{
-			angles[i] = atan2(centers[i].y, centers[i].x) + 2 * pi;
+			std::cerr << i << "  Not in any of these categories" << std::endl;
 		}
 
 	}
@@ -179,7 +201,7 @@ calculation_results_c calculate_flow(const wif_core::airfoil_c & myAirfoil, std:
 		//Setting matrix A and vector B to solve the system
 		for(int i = 0; i < num_rows; i++)
 		{
-			vector_b_data[i] = -U_inf * cos(angles[i] - angle_attack);
+			vector_b_data[i] = -U_inf * (cos(angles[i]) * cos(angle_attack) + sin(angles[i]) * sin(angle_attack));
 
 			for(int j = 0; j < num_columns; j++)
 			{
@@ -248,7 +270,7 @@ calculation_results_c calculate_flow(const wif_core::airfoil_c & myAirfoil, std:
 
 			}
 
-			c_p[i] = 1 - pow((-U_inf * sin(angles[i] + angle_attack) + v_t_i) / U_inf, 2);
+			c_p[i] = 1.0 - pow((U_inf * (-sin(angles[i]) * cos(angle_attack) + cos(angles[i]) * sin(angle_attack)) + v_t_i) / U_inf, 2);
 		}
 
 		//Calculate c_l
@@ -289,8 +311,7 @@ calculation_results_c calculate_flow(const wif_core::airfoil_c & myAirfoil, std:
 			E += lengths[i] * Sigma[i];
 		}
 
-		std::cout << "Voor een gesloten lichaam moet de som van alle source sterktes gelijk zijn aan nul, vergelijking (31):";
-		std::cout << E << std::endl;
+		c.closed_body_check = E;
 
 	} // if (Kutta)
 	else
@@ -300,7 +321,7 @@ calculation_results_c calculate_flow(const wif_core::airfoil_c & myAirfoil, std:
 		double matrix_A_data [num_rows * num_columns];
 		double vector_b_data [num_columns];
 		int k = 0; //first panel
-		int l = num_lines; //last panel
+		int l = num_lines - 1; //last panel
 		struct integration_function_parameters parameters;
 
 		gsl_matrix_view matrix_A_view
@@ -319,7 +340,7 @@ calculation_results_c calculate_flow(const wif_core::airfoil_c & myAirfoil, std:
 					//SOURCE SHEET BLOK (Np x Np)
 					FUNC.function = &source_sheet_function;
 
-					vector_b_data[i] = -U_inf * cos(angles[i] - angle_attack);
+					vector_b_data[i] = -U_inf * cos(angle_attack - angles[i]);
 
 					if(i == j)
 					{
@@ -339,7 +360,7 @@ calculation_results_c calculate_flow(const wif_core::airfoil_c & myAirfoil, std:
 				{
 
 					//VORTEX_SHEET_1 BLOK (EXTRA KOLOM) (: x Np+1 )
-
+					vector_b_data[i] = -U_inf * cos(angle_attack - angles[i]);
 					FUNC.function = &vortex_sheet_function_1;
 					double last_column_value = 0;
 
@@ -361,7 +382,8 @@ calculation_results_c calculate_flow(const wif_core::airfoil_c & myAirfoil, std:
 				{
 
 					//LAATSTE RIJ BLOK (Np+1 x Np)
-					vector_b_data[i] = -U_inf * cos(angles[k] - angle_attack) - U_inf * cos(angles[l] - angle_attack);
+					//vector_b_data[i] = -U_inf * cos(angles[k] - angle_attack) - U_inf * cos(angles[l] - angle_attack);
+					vector_b_data[i] = -U_inf * sin(angle_attack - angles[k]) - U_inf * sin(angle_attack - angles[l]);
 					double last_row_value = 0;
 					FUNC.function = &vortex_sheet_function_lastrow;
 
@@ -452,7 +474,6 @@ calculation_results_c calculate_flow(const wif_core::airfoil_c & myAirfoil, std:
 		}
 
 		double Gamma = gsl_vector_get(x, num_lines);
-
 		//printf("a = \n");
 		//gsl_matrix_fprintf(stdout, &matrix_A_view.matrix, "%g");
 
@@ -481,12 +502,13 @@ calculation_results_c calculate_flow(const wif_core::airfoil_c & myAirfoil, std:
 
 					V_FUNC.function = &v_t_vortex_function;
 					gsl_integration_cquad(&V_FUNC, s_0, lengths[j], 0., 1e-7, w, &result, &error, &nevals);
-					v_t_i -= Gamma / (2 * pi) * result;
+					v_t_i -= (Gamma / (2 * pi)) * result;
+
 				}
 
 			}
 
-			c_p[i] = 1 - pow((-U_inf * sin(angles[i] + angle_attack) + v_t_i) / U_inf, 2);
+			c_p[i] = 1.0 - pow((U_inf * (-sin(angles[i]) * cos(angle_attack) + cos(angles[i]) * sin(angle_attack)) + v_t_i) / U_inf, 2);
 		}
 
 		//Calculate c_l
@@ -512,10 +534,23 @@ calculation_results_c calculate_flow(const wif_core::airfoil_c & myAirfoil, std:
 		accumulate_flow->add_flow(myFlow);
 		accumulate_flow->add_source_sheets(Sigma, myAirfoil);
 		accumulate_flow->add_vortex_sheets(Gamma, myAirfoil);
+
+		std::cout << "Gamma is " << Gamma << std::endl;
+
 		c.airfoil = myAirfoil;
 		c.flow = accumulate_flow;
 		c.c_p = c_p;
 		c.c_l = c_l;
+
+		////
+		double E = 0;
+
+		for(int i = 0; i < num_lines; i++)
+		{
+			E += lengths[i] * Sigma[i];
+		}
+
+		c.closed_body_check = E;
 	} // else kutta
 
 

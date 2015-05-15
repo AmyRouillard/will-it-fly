@@ -54,17 +54,39 @@ public:
 	void set_output_to_file(bool file_output);
 	void set_stagnation_tolerance(double epsilon);
 
+	virtual void set_color_scaling(const std::vector<uint32_t> & scaling)
+	{
+		//
+	}
+
+	virtual void set_automatic_color_scaling(uint32_t levels)
+	{
+		//
+	}
+
 	double clip_value(double value) const;
 
 	void set_airfoil(wif_core::airfoil_c * new_airfoil);
 
 	virtual void draw(const std::string & filename = "") = 0;
 
+	virtual void draw_ivo(const std::string & filename = "")
+	{
+		draw(filename);
+	}
+
 	void set_streamline_seeds(const wif_core::line_2d_c & streamline_seeds);
 
 	void set_streamline_resolution(uint32_t streamline_resolution);
 
+	virtual void plotVectors(std::vector<std::vector<double>>, std::vector<double>, std::vector<std::string>, std::string, std::string, std::string, std::string);
+
 	//
+
+	void set_arrow_scale(double new_arrow_scale)
+	{
+		this->arrow_scale = new_arrow_scale;
+	}
 
 protected:
 	std::shared_ptr<flow_c> flow;
@@ -80,7 +102,9 @@ protected:
 	double clip_max;
 	bool output_to_file;
 
-	std::vector<vector_2d_c> stagnation_point;
+	double arrow_scale;
+
+	mutable std::vector<vector_2d_c> stagnation_point;
 	double stagnation_tolerance;
 
 	wif_core::airfoil_c * airfoil;
